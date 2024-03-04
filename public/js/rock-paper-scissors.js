@@ -53,6 +53,11 @@ AFRAME.registerComponent('socket-color', {
             // if both players chose an input, determine the winner
             if(p1_choice != 0 && p2_choice != 0) {
                 console.log("Asses winner");
+                if(p1_choice == p2_choice){
+                    console.log("No winner. Please pick again");
+                    socket.io.emit("tie")
+
+                }
             }
             else {
                 console.log("Still awaiting user input");

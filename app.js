@@ -30,6 +30,9 @@ io.on('connection', (socket) => {
     })
 
     // -- Player Input --
+    // 1 - Rock
+    // 2 - Paper
+    // 3 - Scissors
     socket.on('p1_rock', (data) => {
         io.emit('p1_choice', {choice:1});
     });
@@ -55,6 +58,25 @@ io.on('connection', (socket) => {
     });
 
     // -- End of Player Input --
+
+
+    // -- Game States --
+    // 1 - P1 Wins
+    // 2 - P2 Wins
+    // 3 - Tie (Retry)
+    socket.on('p1_win', (data) => {
+        io.emit('gameState', {state:1})
+    });
+
+    socket.on('p2_win', (data) => {
+        io.emit('gameState', {state:2})
+    });
+
+    socket.on('tie', (data) => {
+        io.emit('gameState', {state:3})
+    });
+
+    // -- End of Game States --
 });
 
 //start our server
