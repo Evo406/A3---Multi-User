@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+             AFRAME.registerComponent('socket-color', {
+            init : function() {
+                let socket = io();
+                let p1_choice = 0;
+                let p2_choice = 0;
+
+            socket.on('connect', (userData) => {
+                console.log('I exist in the network, yay!');
+
+                document.querySelector('#rock_button').addEventListener('click', function(e) {
+                    socket.emit('p1_rock');
+             });
+
+                document.querySelector('#paper_button').addEventListener('click', function(e) {
+                    socket.emit('p1_paper');
+                });
+
+                document.querySelector('#scissors_button').addEventListener('click', function(e) {
+                    socket.emit('p1_scissors');
+                });
+
+                // //listen for custom color_change event
+                // socket.on('color_change', (data) => {
+                //     //make a css color, then apply to the baackground of body
+                //     let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
+                //     console.log('colour_cange: ' + colorStr);
+                //     //document.body.style.backgroundColor = colorStr;
+                //     document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
+                //     });
+
+                    //listen for user input events. We need to call checkWinner for every new event interaction
+                    socket.on('p1_choice', (data) => {
+                        p1_choice = data.choice;
+                        console.log('Player 1 chose: ' + p1_choice);
+                        checkWinner();
+
+                    });
+
+                    socket.on('p2_choice', (data) => {
+                        p2_choice = data.choice;
+                        console.log('Player 2 chose: ' + p2_choice);
+                        checkWinner();
+                    });
+
+
+
+                });
+
+                // Function checks to see if both players selected an option
+                function checkWinner() {
+                    // if both players chose an input, determine the winner
+                    if(p1_choice != 0 && p2_choice != 0) {
+                        console.log("Asses winner");
+                    }
+                    else {
+                        console.log("Still awaiting user input");
+                    }
+                }
+            }
+        });
+        </script>
+
+    </head>
+    <body>
+        <a-scene id="scene-background" background="color:rgb(0,0,0);" rock-paper-scissors>
+            <a-entity id="camera_main" position="0 1.6 0" camera look-controls>
+                <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+            </a-entity>
+
+            <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
+        
+            <a-entity id="button_obj_red" position="-1 0 -2">
+                <a-entity id="rock_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255,100,100);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(255,0,0); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(255,100,100); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+
+            <a-entity id="button_obj_blue" position="0 0 -2">
+                <a-entity id="paper_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(100,100,255);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(0,0,255); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(100,100,255); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+
+            <a-entity id="button_obj_green" position="1 0 -2">
+                <a-entity id="scissors_button" class="interactive button" position="0 0.6 0" 
+                          geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(100,255,100);"
+                          animation__mouseenter="property:material.color; type:color; to:rgb(0,255,0); startEvents:mouseenter; dur:200;"
+                          animation__mouseleave="property:material.color; type:color; to:rgb(100,255,100); startEvents:mouseleave; dur:200;"
+                          animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300;"></a-entity>
+                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+</html>

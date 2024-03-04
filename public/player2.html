@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <button id="rock_button" style="background-color:rgb(255,0,0); color:rgb(255,255,255);">ROCK</button>
+        <button id="paper_button" style="background-color:rgb(0, 0, 255); color:rgb(255,255,255);">PAPER</button>
+        <button id="scissors_button" style="background-color:rgb(0, 255, 0); color:rgb(255,255,255);">SCISSORS</button>
+
+    </body>
+    <!-- Script tag at the end of the page for load order -->
+    <script>
+        let socket = io();
+
+        socket.on('connect', (userData) => {
+            console.log('I exist in the network, yay!');
+
+            document.querySelector('#rock_button').addEventListener('click', function(e) {
+                socket.emit('p2_rock');
+            });
+
+            document.querySelector('#paper_button').addEventListener('click', function(e) {
+                socket.emit('p2_paper');
+            });
+
+            document.querySelector('#scissors_button').addEventListener('click', function(e) {
+                socket.emit('p2_paper');
+            });
+
+            //listen for custom color_change event
+            socket.on('color_change', (data) => {
+                //make a css color, then apply to the baackground of body
+                let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
+                console.log('colour_cange: ' + colorStr);
+                document.body.style.backgroundColor = colorStr;
+            });
+
+            //listen for user input events. We need to call checkWinner for every new event interaction
+            socket.on('p1_choice', (data) => {
+                p1_choice = data.choice;
+                console.log('Player 1 chose: ' + p1_choice);
+                checkWinner();
+
+            });
+
+            socket.on('p2_choice', (data) => {
+                p2_choice = data.choice;
+                console.log('Player 2 chose: ' + p2_choice);
+                checkWinner();
+            });
+            
+        });
+    </script>
+</html>
