@@ -7,8 +7,6 @@ AFRAME.registerComponent('rock-paper-scissors', {
         let p2_choice = 0;
 
     socket.on('connect', (userData) => {
-        console.log('I exist in the network, yay!');
-
         document.querySelector('#rock_button').addEventListener('click', function(e) {
             socket.emit('p1_rock');
      });
@@ -50,14 +48,14 @@ AFRAME.registerComponent('rock-paper-scissors', {
             //listen for user input events. We need to call checkWinner for every new event interaction
             socket.on('p1_choice', (data) => {
                 p1_choice = data.choice;
-                console.log('Player 1 chose: ' + p1_choice);
+                //console.log('Player 1 chose: ' + p1_choice);
                 checkWinner();
 
             });
 
             socket.on('p2_choice', (data) => {
                 p2_choice = data.choice;
-                console.log('Player 2 chose: ' + p2_choice);
+                //console.log('Player 2 chose: ' + p2_choice);
                 checkWinner();
             });
 
@@ -69,8 +67,6 @@ AFRAME.registerComponent('rock-paper-scissors', {
         function checkWinner() {
             // if both players chose an input, determine the winner
             if(p1_choice != 0 && p2_choice != 0) {
-                console.log("P1:", p1_choice);
-                console.log("P2:", p2_choice);
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
                     socket.emit("tie");
@@ -98,7 +94,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 p2_choice = 0;
             }
             else {
-                console.log("Still awaiting user input");
+                console.log("Awaiting player input");
             }
         }
     }

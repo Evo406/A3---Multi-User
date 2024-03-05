@@ -84,6 +84,18 @@ io.on('connection', (socket) => {
     });
 
     // -- End of Game States --
+
+
+    // -- Start Button States --
+    socket.on('p1_startClicked', (data) => {
+        console.log("Player 1 Ready to Start"); 
+        io.emit('p1_ready', {state:1});
+    });
+
+    socket.on('p2_startClicked', (data) => {
+        console.log("Player 2 Ready to Start"); 
+        io.emit('p2_ready', {state:1});
+    });
 });
 
 //start our server
