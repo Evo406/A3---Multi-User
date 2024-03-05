@@ -23,23 +23,21 @@ AFRAME.registerComponent('rock-paper-scissors', {
 
             // Asses current state of the game
             socket.on('gameState', (data) => {
+                let colorStr = '';
                 if (data.state == 1){ // Player 1 Wins
-                    // Set player1 bg to green
-                    document.querySelector('#scene-background').setAttribute("background", {color:green});
+                    colorStr = 'rgb(' + 0 + ',' + 255 + ',' + 0 + ')'; // Green
                     console.log("Player 2 Wins.");
                 }
                 else if(data.state == 2) { // Player 2 Wins
-                    // Set player 2 bg to red
-                    document.querySelector('#scene-background').setAttribute("background", {color:red});
+                    colorStr = 'rgb(' + 255 + ',' + 0 + ',' + 0 + ')'; // Red
                     console.log("Player 2 Wins.");
 
                 }
                 else if(data.state == 3){ // Tie
-                    document.querySelector('#scene-background').setAttribute("background", {color:grey});
+                    colorStr = 'rgb(' + 50 + ',' + 50 + ',' + 50 + ')'; // Grey
                     console.log("Tied. Please try again.");
-
                 }
-                
+                document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
                 });
 
             //listen for user input events. We need to call checkWinner for every new event interaction
@@ -68,24 +66,24 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 console.log("P2:", p2_choice);
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
-                    socket.io.emit("tie")
+                    socket.emit("tie")
                 }
                 else if (p1_choice == "1" && p2_choice == "3") {
                     console.log("Rock beats Scissors");
-                    socket.io.emit('p1_win');
+                    socket.emit('p1_win');
                 }
-                else if (p1_choice == 2 && p2_choice == 1) {
+                else if (p1_choice == "2" && p2_choice == "1") {
                     console.log("Paper beats Rock");
-                    socket.io.emit('p1_win');
+                    socket.emit('p1_win');
                 }
-                else if (p1_choice == 3 && p2_choice == 2) {
+                else if (p1_choice == "3" && p2_choice == "2") {
                     console.log("Scissors beats Paper");
-                    socket.io.emit('p1_win');
+                    socket.emit('p1_win');
                 }
                 
                 // In any other case, P2 wins
                 else {
-                    socket.io.emit('p2_win');
+                    socket.emit('p2_win');
                 }
 
                 // Reset both player choices 

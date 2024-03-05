@@ -71,15 +71,16 @@ io.on('connection', (socket) => {
     // 2 - P2 Wins
     // 3 - Tie (Retry)
     socket.on('p1_win', (data) => {
+        console.log("Player 1 Win State");
         io.emit('gameState', {state:1})
     });
 
     socket.on('p2_win', (data) => {
-        io.emit('gameState', {state:2})
+        io.emit('gameState', {state:2});
     });
 
     socket.on('tie', (data) => {
-        io.emit('gameState', {state:3})
+        io.emit('gameState', {state:3});
     });
 
     // -- End of Game States --
