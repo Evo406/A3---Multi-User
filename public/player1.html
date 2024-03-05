@@ -7,6 +7,15 @@
     </head>
     <body>
         <a-scene id="scene-background" background="color:rgb(255,255,255);" rock-paper-scissors>
+
+            <!-- Start Button -->
+            <a-plane id="startButton" width="2" height="1" position="0 1 -1.5" color="rgb(50,50,50)" opacity="1">
+                <a-text value="Start" position="-0.25 0 0" color="White" scale="1 1 1"></a-text>
+            </a-plane>
+
+            <!-- Event Listener to Handle Clicks on Start Button -->
+            <a-entity cursor-listener></a-entity>
+
             <a-entity id="camera_main" position="0 1.6 0" camera look-controls>
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
             </a-entity>
