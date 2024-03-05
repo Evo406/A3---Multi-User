@@ -1,7 +1,6 @@
 <html>
     <head>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="js/rock-paper-scissors.js"></script>
 
     </head>
     <body>
@@ -13,6 +12,8 @@
     <!-- Script tag at the end of the page for load order -->
     <script>
         let socket = io();
+        let p1_choice = 0; 
+        let p2_choice = 0;
 
         socket.on('connect', (userData) => {
             console.log('I exist in the network, yay!');
@@ -26,31 +27,47 @@
             });
 
             document.querySelector('#scissors_button').addEventListener('click', function(e) {
-                socket.emit('p2_paper');
-            });
-
-            //listen for custom color_change event
-            socket.on('color_change', (data) => {
-                //make a css color, then apply to the baackground of body
-                let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
-                console.log('colour_cange: ' + colorStr);
-                document.body.style.backgroundColor = colorStr;
+                socket.emit('p3_scissors');
             });
 
             //listen for user input events. We need to call checkWinner for every new event interaction
             socket.on('p1_choice', (data) => {
                 p1_choice = data.choice;
                 console.log('Player 1 chose: ' + p1_choice);
-                checkWinner();
-
             });
 
             socket.on('p2_choice', (data) => {
                 p2_choice = data.choice;
                 console.log('Player 2 chose: ' + p2_choice);
-                checkWinner();
             });
-            
+                    
+        // Function checks to see if both players selected an option
+        function checkWinner() {
+            // if both players chose an input, determine the winner
+            if(p1_choice != 0 && p2_choice != 0) {
+                console.log("Asses winner");
+                if(p1_choice == p2_choice){ // Tie
+                    console.log("No winner. Please pick again");
+                    socket.io.emit("tie")
+                }
+                else if( // Assess all possible winning positons for P1 to determine the winner (No need to check the win states for each person)
+                    p1_choice == 1 && p2_choice == 3 || // Rock beats Scissors
+                    p1_choice == 2 && p2_choice == 1 || // Paper beats Rock
+                    p1_choice == 3 && p2_choice == 2){  // Scissors beats Paper
+                        socket.io.emit('p1_win');
+                }
+                else {
+                    socket.io.emit('p2_win');
+                }
+
+                // In any case, reset both player choices 
+                p1_choice = 0;
+                p2_choice = 0;
+            }
+            else {
+                console.log("Still awaiting user input");
+            }
+        }
         });
     </script>
 </html>

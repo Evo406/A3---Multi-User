@@ -7,8 +7,14 @@ const io        = require('socket.io')(server);
 const LISTEN_PORT = 8080;
 
 // middleware to serve static files
-app.use(express.static(__dirname + '/public;'));
-
+app.use(express.static(__dirname + '/public', {
+    // Check  server configuration to ensure that JavaScript files are being served with the correct MIME type.
+    setHeaders: (res, path, stat) => {
+        if (path.endsWith('.js')) {
+            res.set('Content-Type', 'application/javascript');
+        }
+    }
+}));
 //create our routes
 app.get('/', function(req,res) {
     res.sendFile(__dirname + '/public/index.html');

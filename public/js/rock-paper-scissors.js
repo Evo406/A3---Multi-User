@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-AFRAME.registerComponent('socket-color', {
-    init : function() {
+AFRAME.registerComponent('rock-paper-scissors', {
+    init: function() {
         let socket = io();
         let p1_choice = 0;
         let p2_choice = 0;
@@ -21,14 +21,26 @@ AFRAME.registerComponent('socket-color', {
             socket.emit('p1_scissors');
         });
 
-        // //listen for custom color_change event
-        // socket.on('color_change', (data) => {
-        //     //make a css color, then apply to the baackground of body
-        //     let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
-        //     console.log('colour_cange: ' + colorStr);
-        //     //document.body.style.backgroundColor = colorStr;
-        //     document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
-        //     });
+            // Asses current state of the game
+            socket.on('gameState', (data) => {
+                if (data.state == 1){ // Player 1 Wins
+                    // Set player1 bg to green
+                    document.querySelector('#scene-background').setAttribute("background", {color:green});
+                    console.log("Player 2 Wins.");
+                }
+                else if(data.state == 2) { // Player 2 Wins
+                    // Set player 2 bg to red
+                    document.querySelector('#scene-background').setAttribute("background", {color:red});
+                    console.log("Player 2 Wins.");
+
+                }
+                else if(data.state == 3){ // Tie
+                    document.querySelector('#scene-background').setAttribute("background", {color:grey});
+                    console.log("Tied. Please try again.");
+
+                }
+                
+                });
 
             //listen for user input events. We need to call checkWinner for every new event interaction
             socket.on('p1_choice', (data) => {
@@ -52,12 +64,33 @@ AFRAME.registerComponent('socket-color', {
         function checkWinner() {
             // if both players chose an input, determine the winner
             if(p1_choice != 0 && p2_choice != 0) {
-                console.log("Asses winner");
-                if(p1_choice == p2_choice){
+                console.log("P1:", p1_choice);
+                console.log("P2:", p2_choice);
+                if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
                     socket.io.emit("tie")
-
                 }
+                else if (p1_choice == "1" && p2_choice == "3") {
+                    console.log("Rock beats Scissors");
+                    socket.io.emit('p1_win');
+                }
+                else if (p1_choice == 2 && p2_choice == 1) {
+                    console.log("Paper beats Rock");
+                    socket.io.emit('p1_win');
+                }
+                else if (p1_choice == 3 && p2_choice == 2) {
+                    console.log("Scissors beats Paper");
+                    socket.io.emit('p1_win');
+                }
+                
+                // In any other case, P2 wins
+                else {
+                    socket.io.emit('p2_win');
+                }
+
+                // Reset both player choices 
+                p1_choice = 0;
+                p2_choice = 0;
             }
             else {
                 console.log("Still awaiting user input");
