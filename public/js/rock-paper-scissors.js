@@ -42,7 +42,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 // Reset background color after duration
                 setTimeout(() => { 
                     document.querySelector('#scene-background').setAttribute("background", {color: 'white' });
-                }, 5000); // 5 seconds
+                }, 3000); // 5 seconds
                 });
 
                 
@@ -73,7 +73,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 console.log("P2:", p2_choice);
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
-                    socket.emit("reset");
+                    socket.emit("tie");
                 }
                 else if (p1_choice == "1" && p2_choice == "3") {
                     console.log("Rock beats Scissors");
