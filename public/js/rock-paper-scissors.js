@@ -26,19 +26,26 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 let colorStr = '';
                 if (data.state == 1){ // Player 1 Wins
                     colorStr = 'rgb(' + 0 + ',' + 255 + ',' + 0 + ')'; // Green
-                    console.log("Player 2 Wins.");
+                    console.log("Player 1 Wins.");
                 }
                 else if(data.state == 2) { // Player 2 Wins
                     colorStr = 'rgb(' + 255 + ',' + 0 + ',' + 0 + ')'; // Red
                     console.log("Player 2 Wins.");
 
                 }
-                else if(data.state == 3){ // Tie
+                else if(data.state == 3){ // Reset
                     colorStr = 'rgb(' + 50 + ',' + 50 + ',' + 50 + ')'; // Grey
                     console.log("Tied. Please try again.");
                 }
                 document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
+
+                // Reset background color after duration
+                setTimeout(() => { 
+                    document.querySelector('#scene-background').setAttribute("background", {color: 'white' });
+                }, 5000); // 5 seconds
                 });
+
+                
 
             //listen for user input events. We need to call checkWinner for every new event interaction
             socket.on('p1_choice', (data) => {
@@ -66,7 +73,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 console.log("P2:", p2_choice);
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
-                    socket.emit("tie")
+                    socket.emit("reset");
                 }
                 else if (p1_choice == "1" && p2_choice == "3") {
                     console.log("Rock beats Scissors");

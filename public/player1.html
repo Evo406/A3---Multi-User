@@ -6,12 +6,12 @@
 
     </head>
     <body>
-        <a-scene id="scene-background" background="color:rgb(0,0,0);" rock-paper-scissors>
+        <a-scene id="scene-background" background="color:rgb(255,255,255);" rock-paper-scissors>
             <a-entity id="camera_main" position="0 1.6 0" camera look-controls>
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
             </a-entity>
 
-            <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:white;"></a-entity>
+            <a-entity id="ground" rotation="-90 0 0" geometry="primitive:plane; width:8; height:8;" material="color:Grey;"></a-entity>
         
             <a-entity id="button_obj_red" position="-1 0 -2">
                 <a-entity id="rock_button" class="interactive button" position="0 0.6 0" 

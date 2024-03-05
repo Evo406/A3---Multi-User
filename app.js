@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
     // -- Game States --
     // 1 - P1 Wins
     // 2 - P2 Wins
-    // 3 - Tie (Retry)
+    // 3 - Tie (Reset)
     socket.on('p1_win', (data) => {
         console.log("Player 1 Win State");
         io.emit('gameState', {state:1})
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
         io.emit('gameState', {state:2});
     });
 
-    socket.on('tie', (data) => {
+    socket.on('tie', (data) => { 
         io.emit('gameState', {state:3});
     });
 

@@ -1,12 +1,16 @@
 <html>
     <head>
         <script src="/socket.io/socket.io.js"></script>
-
+        <style>
+            body {
+                background-color: rgb(255, 255, 255);
+            }
+        </style>
     </head>
     <body>
         <button id="rock_button" style="background-color:rgb(255,0,0); color:rgb(255,255,255);">ROCK</button>
         <button id="paper_button" style="background-color:rgb(0, 0, 255); color:rgb(255,255,255);">PAPER</button>
-        <button id="scissors_button" style="background-color:rgb(0, 255, 0); color:rgb(255,255,255);">SCISSORS</button>
+        <button id="scissors_button" style="background-color:rgb(0, 255, 0); color:rgb(0,0,0);">SCISSORS</button>
 
     </body>
     <!-- Script tag at the end of the page for load order -->
@@ -14,6 +18,7 @@
         let socket = io();
         let p1_choice = 0; 
         let p2_choice = 0;
+        let colorStr = '';
 
         socket.on('connect', (userData) => {
             console.log('I exist in the network, yay!');
@@ -40,34 +45,30 @@
                 p2_choice = data.choice;
                 console.log('Player 2 chose: ' + p2_choice);
             });
-                    
-        // Function checks to see if both players selected an option
-        function checkWinner() {
-            // if both players chose an input, determine the winner
-            if(p1_choice != 0 && p2_choice != 0) {
-                console.log("Asses winner");
-                if(p1_choice == p2_choice){ // Tie
-                    console.log("No winner. Please pick again");
-                    socket.io.emit("tie")
-                }
-                else if( // Assess all possible winning positons for P1 to determine the winner (No need to check the win states for each person)
-                    p1_choice == 1 && p2_choice == 3 || // Rock beats Scissors
-                    p1_choice == 2 && p2_choice == 1 || // Paper beats Rock
-                    p1_choice == 3 && p2_choice == 2){  // Scissors beats Paper
-                        socket.io.emit('p1_win');
-                }
-                else {
-                    socket.io.emit('p2_win');
-                }
 
-                // In any case, reset both player choices 
-                p1_choice = 0;
-                p2_choice = 0;
-            }
-            else {
-                console.log("Still awaiting user input");
-            }
-        }
+            // Asses current state of the game
+            socket.on('gameState', (data) => {
+                let colorStr = '';
+                if (data.state == 1){ // Player 1 Wins
+                    colorStr = 'rgb(' + 255 + ',' + 0 + ',' + 0 + ')'; // Green
+                    console.log("Player 1 Wins.");
+                }
+                else if(data.state == 2) { // Player 2 Wins
+                    colorStr = 'rgb(' + 0 + ',' + 255 + ',' + 0 + ')'; // Red
+                    console.log("Player 2 Wins.");
+
+                }
+                else if(data.state == 3){ // Reset
+                    colorStr = 'rgb(' + 50 + ',' + 50 + ',' + 50 + ')'; // Grey
+                    console.log("Tied. Please try again.");
+                }
+                document.body.style.backgroundColor = colorStr;
+
+                // Reset background colour to white after duration
+                setTimeout(() => { 
+                    document.body.style.backgroundColor = 'rgb(' + 255 + ',' + 255 + ',' + 255 + ')';
+                }, 5000); // 5 seconds
+                });
         });
     </script>
 </html>
