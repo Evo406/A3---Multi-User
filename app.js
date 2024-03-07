@@ -64,7 +64,23 @@ io.on('connection', (socket) => {
     });
 
     // -- End of Player Input --
+    
+    
+    // -- Player Status --
 
+    socket.on('p1_ready', (data) => {
+        io.emit('p1_status', {choice:1});
+    });
+
+    socket.on('p2_ready', (data) => {
+        io.emit('p2_status', {choice:1});
+    });
+
+    socket.on('startGame', (data) => {
+        io.emit('redirect', {state:0});
+    });
+
+    // -- End of Player Status --
 
     // -- Game States --
     // 1 - P1 Wins

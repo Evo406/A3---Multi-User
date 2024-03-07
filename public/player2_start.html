@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <style>
+            body {
+                background-color: rgb(255, 255, 255);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Player 2: Please click below to begin.</h1>
+        <button id="ready" style="background-color:rgb(46, 46, 46); color:rgb(255,255,255);">Ready</button>
+
+    </body>
+    <script>
+        let socket = io();
+        let p1_status = 0; // Player ready status
+        let p2_status = 0;
+
+
+        socket.on('connect', (userData) => {
+
+            document.querySelector('#ready').addEventListener('click', function(e) {
+                socket.emit('p2_ready');
+            });
+
+            socket.on('p1_status', (data) => {
+                p1_status = data.choice;
+                checkStatus();
+            });
+
+            socket.on('p2_status', (data) => {
+                p2_status = data.choice;
+                checkStatus();
+            });
+
+            // Once both players are ready, redirect them to start the game
+            socket.on('redirect', (data) => {
+                window.location.href = 'player2.html'; // Redirect to player1.html
+            });
+
+            // Function checks to see if both players are ready to start. In the context of this assignment, this is considered the "collaborative" interaction
+            function checkStatus() {
+                if(p1_status == 1 && p2_status == 1) {   
+                    socket.emit('startGame');
+                }
+                else {
+                console.log("Not all players are ready.");
+                }
+            }
+            
+        });
+    </script>
+</html>
