@@ -46,7 +46,7 @@
                 console.log('Player 2 chose: ' + p2_choice);
             });
 
-            // Asses current state of the game
+            // Asses current state of the game and change background accordingly
             socket.on('gameState', (data) => {
                 let colorStr = '';
                 if (data.state == 1){ // Player 1 Wins

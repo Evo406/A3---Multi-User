@@ -20,14 +20,20 @@ app.get('/', function(req,res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-
-// Player gets redirected to player1_start until both players are ready
 app.get('/player1', function(req,res) {
     res.sendFile(__dirname + '/public/player1_start.html');
 });
 
 app.get('/player2', function(req,res) {
     res.sendFile(__dirname + '/public/player2_start.html');
+});
+
+app.get('/player2_start', function(req,res) {
+    res.sendFile(__dirname + '/public/player2_start.html');
+});
+
+app.get('/player1_start', function(req,res) {
+    res.sendFile(__dirname + '/public/player1_start.html');
 });
 
 io.on('connection', (socket) => {
