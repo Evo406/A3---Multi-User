@@ -63,10 +63,10 @@ AFRAME.registerComponent('rock-paper-scissors', {
 
         });
 
-        // Function checks to see if both players selected an option
+        // Function checks to see if both players selected an option & determine winner
         function checkWinner() {
-            // if both players chose an input, determine the winner
             if(p1_choice != 0 && p2_choice != 0) {
+                // Compare all winning scenarios for Player 1
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
                     socket.emit("tie");
@@ -83,6 +83,8 @@ AFRAME.registerComponent('rock-paper-scissors', {
                     console.log("Scissors beats Paper");
                     socket.emit('p1_win');
                 }
+                
+                // if BOTH are rock, Dwayne The Rock Johnson :D 
                 
                 // In any other case, P2 wins
                 else {
