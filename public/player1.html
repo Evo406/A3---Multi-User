@@ -7,7 +7,9 @@
     </head>
     <body>
         <a-scene id="scene-background" background="color:rgb(255,255,255);" rock-paper-scissors>
-
+            <a-assets>
+                <img id="dwayneTexture" src="assets/dwayne_johnson.JPG">
+            </a-assets>
             <a-entity id="camera_main" position="0 1.6 0" camera look-controls>
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
             </a-entity>
@@ -43,6 +45,10 @@
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:white;"></a-entity>
                 <a-text value="Scissors" position="-0.45 0.75 0.75" color="black" scale="0.4 0.4 0.4"></a-text>
             </a-entity>
+
+            <!-- Hide plane by default -->
+            <a-plane id="dwaynePlane" position="0 2 -5" rotation="0 0 0" width="6" height="4" visible="false" material="src: #dwayneTexture"></a-plane>
+
         </a-scene>
     </body>
 </html>

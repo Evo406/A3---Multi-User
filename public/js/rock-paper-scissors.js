@@ -21,7 +21,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
 
             // Asses current state of the game
             socket.on('gameState', (data) => {
-                let colorStr = '';
+                let colorStr = 'rgb(' + 255 + ',' + 255 + ',' + 255 + ')'; // default to white
                 if (data.state == 1){ // Player 1 Wins
                     colorStr = 'rgb(' + 0 + ',' + 255 + ',' + 0 + ')'; // Green
                     console.log("Player 1 Wins.");
@@ -35,12 +35,21 @@ AFRAME.registerComponent('rock-paper-scissors', {
                     colorStr = 'rgb(' + 50 + ',' + 50 + ',' + 50 + ')'; // Grey
                     console.log("Tied. Please try again.");
                 }
+
+                else if(data.state == 4){ // Dwayne The Rock Johnson
+                    colorStr = 'rgb(' + 50 + ',' + 50 + ',' + 50 + ')'; // Grey
+                    // Show the plane with Dwayne's image texture
+                    console.log("Dwayne The Rock Johnson");
+                    document.querySelector('#dwaynePlane').setAttribute('visible', true);
+                }
                 document.querySelector('#scene-background').setAttribute("background", {color:colorStr});
 
                 // Reset background color after duration
                 setTimeout(() => { 
                     document.querySelector('#scene-background').setAttribute("background", {color: 'white' });
+                    document.querySelector('#dwaynePlane').setAttribute('visible', false);
                 }, 3000); // 5 seconds
+                
                 });
 
                 
@@ -58,6 +67,7 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 //console.log('Player 2 chose: ' + p2_choice);
                 checkWinner();
             });
+            
 
 
 
@@ -69,7 +79,13 @@ AFRAME.registerComponent('rock-paper-scissors', {
                 // Compare all winning scenarios for Player 1
                 if(p1_choice == p2_choice){ // Tie
                     console.log("No winner. Please pick again");
-                    socket.emit("tie");
+
+                    if (p1_choice == "1" && p2_choice == "1") { // If both pick ROCK, Dwayne the Rock Johnson appears
+                        socket.emit('theRock');
+                    }
+                    else {
+                        socket.emit("tie");
+                    }
                 }
                 else if (p1_choice == "1" && p2_choice == "3") {
                     console.log("Rock beats Scissors");
@@ -84,7 +100,8 @@ AFRAME.registerComponent('rock-paper-scissors', {
                     socket.emit('p1_win');
                 }
                 
-                // if BOTH are rock, Dwayne The Rock Johnson :D 
+
+                
                 
                 // In any other case, P2 wins
                 else {

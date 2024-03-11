@@ -70,12 +70,10 @@ io.on('connection', (socket) => {
     socket.on('p2_scissors', (data) => {
         io.emit('p2_choice', {choice:3});
     });
-
     // -- End of Player Input --
     
     
     // -- Player Status --
-
     socket.on('p1_ready', (data) => {
         io.emit('p1_status', {choice:1});
     });
@@ -90,10 +88,12 @@ io.on('connection', (socket) => {
 
     // -- End of Player Status --
 
+
     // -- Game States --
     // 1 - P1 Wins
     // 2 - P2 Wins
     // 3 - Tie (Reset)
+    // 4 - Dwayne Johnson (Rock)
     socket.on('p1_win', (data) => {
         console.log("Player 1 Win State");
         io.emit('gameState', {state:1})
@@ -105,6 +105,11 @@ io.on('connection', (socket) => {
 
     socket.on('tie', (data) => { 
         io.emit('gameState', {state:3});
+    });
+
+    // Dwayne the Rock Johnson
+    socket.on('theRock', (data) => {
+        io.emit('gameState', {state:4});
     });
 
     // -- End of Game States --
@@ -120,6 +125,9 @@ io.on('connection', (socket) => {
         console.log("Player 2 Ready to Start"); 
         io.emit('p2_ready', {state:1});
     });
+    // -- End of states --
+
+
 });
 
 //start our server
